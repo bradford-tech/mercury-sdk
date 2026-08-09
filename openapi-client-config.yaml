@@ -1,0 +1,12 @@
+# Config for `openapi-python-client generate`. See generate.sh for the full command.
+project_name_override: mercury-sdk
+package_name_override: mercury_sdk
+
+# Statement/document endpoints return raw PDF bytes; without this the generator
+# skips those responses as an unrecognized content type.
+content_type_overrides:
+  application/pdf: application/octet-stream
+
+post_hooks:
+  - "ruff check . --fix-only"
+  - "ruff format ."

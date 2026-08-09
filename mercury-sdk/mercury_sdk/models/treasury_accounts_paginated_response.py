@@ -1,0 +1,87 @@
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any, TypeVar
+
+from attrs import define as _attrs_define
+from attrs import field as _attrs_field
+
+if TYPE_CHECKING:
+    from ..models.treasury_account import TreasuryAccount
+    from ..models.treasury_accounts_paginated_response_page import TreasuryAccountsPaginatedResponsePage
+
+
+T = TypeVar("T", bound="TreasuryAccountsPaginatedResponse")
+
+
+@_attrs_define
+class TreasuryAccountsPaginatedResponse:
+    """Paginated response type for treasury accounts API endpoint
+
+    Attributes:
+        accounts (list[TreasuryAccount]):  List of treasury accounts in the current page
+        page (TreasuryAccountsPaginatedResponsePage):  Pagination information including cursors for navigating to
+            next/previous pages
+    """
+
+    accounts: list[TreasuryAccount]
+    page: TreasuryAccountsPaginatedResponsePage
+    additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        accounts = []
+        for accounts_item_data in self.accounts:
+            accounts_item = accounts_item_data.to_dict()
+            accounts.append(accounts_item)
+
+        page = self.page.to_dict()
+
+        field_dict: dict[str, Any] = {}
+        field_dict.update(self.additional_properties)
+        field_dict.update(
+            {
+                "accounts": accounts,
+                "page": page,
+            }
+        )
+
+        return field_dict
+
+    @classmethod
+    def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.treasury_account import TreasuryAccount
+        from ..models.treasury_accounts_paginated_response_page import TreasuryAccountsPaginatedResponsePage
+
+        d = dict(src_dict)
+        accounts = []
+        _accounts = d.pop("accounts")
+        for accounts_item_data in _accounts:
+            accounts_item = TreasuryAccount.from_dict(accounts_item_data)
+
+            accounts.append(accounts_item)
+
+        page = TreasuryAccountsPaginatedResponsePage.from_dict(d.pop("page"))
+
+        treasury_accounts_paginated_response = cls(
+            accounts=accounts,
+            page=page,
+        )
+
+        treasury_accounts_paginated_response.additional_properties = d
+        return treasury_accounts_paginated_response
+
+    @property
+    def additional_keys(self) -> list[str]:
+        return list(self.additional_properties.keys())
+
+    def __getitem__(self, key: str) -> Any:
+        return self.additional_properties[key]
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        self.additional_properties[key] = value
+
+    def __delitem__(self, key: str) -> None:
+        del self.additional_properties[key]
+
+    def __contains__(self, key: str) -> bool:
+        return key in self.additional_properties
